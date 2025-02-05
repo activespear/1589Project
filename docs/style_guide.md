@@ -17,6 +17,8 @@ _(в IntelliJ IDEA)_
 public class DataProcessor { ... }
 public interface DataService { ... }
 ```
+Классы именуем в соответствии с названием уязвимости.
+
 ✅ **Методы и переменные:** `lowerCamelCase`
 ```java
 public void processData() { ... }
