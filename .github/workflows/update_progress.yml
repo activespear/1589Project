@@ -1,0 +1,57 @@
+name: Update Progress in README
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-progress:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout репозитория
+        uses: actions/checkout@v4
+
+      - name: Подсчет уязвимостей по видам
+        run: |
+          TOTAL_CRITICAL=40
+          TOTAL_MAJOR=301
+          TOTAL_NORMAL=83
+          TOTAL_MINOR=318
+          TOTAL_UNDEFINED=10
+          
+          DONE_CRITICAL=$(find "src/main/java/vulnerabilities/CRITICAL" -type f | wc -l)
+          DONE_MAJOR=$(find "src/main/java/vulnerabilities/MAJOR" -type f | wc -l)
+          DONE_NORMAL=$(find "src/main/java/vulnerabilities/NORMAL" -type f | wc -l)
+          DONE_MINOR=$(find "src/main/java/vulnerabilities/MINOR" -type f | wc -l)
+          DONE_UNDEFINED=$(find "src/main/java/vulnerabilities/UNDEFINED" -type f | wc -l)
+
+          echo "CRITICAL: $DONE_CRITICAL из $TOTAL_CRITICAL"
+          echo "MAJOR: $DONE_MAJOR из $TOTAL_MAJOR"
+          echo "NORMAL: $DONE_NORMAL из $TOTAL_NORMAL"
+          echo "MINOR: $DONE_MINOR из $TOTAL_MINOR"
+          echo "UNDEFINED: $DONE_UNDEFINED из $TOTAL_UNDEFINED"
+
+          README_PATH="docs/README.md"
+
+          sed -i "s|`CRITICAL:` `[0-9]\+/40`|`CRITICAL:` `$DONE_CRITICAL/$TOTAL_CRITICAL`|" $README_PATH
+          sed -i "s|`MAJOR:` `[0-9]\+/301`|`MAJOR:` `$DONE_MAJOR/$TOTAL_MAJOR`|" $README_PATH
+          sed -i "s|`NORMAL:` `[0-9]\+/83`|`NORMAL:` `$DONE_NORMAL/$TOTAL_NORMAL`|" $README_PATH
+          sed -i "s|`MINOR:` `[0-9]\+/318`|`MINOR:` `$DONE_MINOR/$TOTAL_MINOR`|" $README_PATH
+          sed -i "s|`UNDEFINED:` `[0-9]\+/10`|`UNDEFINED:` `$DONE_UNDEFINED/$TOTAL_UNDEFINED`|" $README_PATH
+
+      - name: Проверка изменений в README
+        run: |
+          if git diff --quiet; then
+            echo "Нет изменений, выход"
+            exit 0
+          fi
+
+      - name: Коммит и пуш обновленного README
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add $README_PATH
+          git commit -m "Автообновление прогресса по уязвимостям в README"
+          git push
