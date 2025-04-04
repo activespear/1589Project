@@ -25,12 +25,10 @@ public class DLS_DEAD_LOCAL_STORE {
                 int x = computeValue(); // Значение переменной используется
                 System.out.println("Computed value: " + x);
             }
-
             int computeValue() {
                 return 42;
             }
         }
-
         MyClass myClass = new MyClass();
         myClass.doSomething();
     }
