@@ -1,4 +1,4 @@
-package miem.projects.vulnerabilities.MAJOR.FB;
+package miem.projects.vulnerabilities.MINOR.FB;
 
 import java.util.Objects;
 
